@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react';
+import React, {Component} from 'react';
+import firebase from 'firebase';
 import {
   SafeAreaView,
   StyleSheet,
@@ -19,9 +20,20 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const Initial = () => {
+
+class Initial extends Component {
+
+  testAdd(){
+    firebase.database().ref(`/users/`).update({
+      firstName: "Steven"
+    })
+    Actions.Feed();
+  }
+
+
+  render(){
   return (
-    <Fragment>
+    <View>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
@@ -38,7 +50,7 @@ const Initial = () => {
                 <Button
                 title="Join Feed"
                 color="#f194ff"
-                onPress={() => Actions.Feed()}
+                onPress={() => this.testAdd()}
                 />
             </View>
             <View style={styles.sectionContainer}>
@@ -57,9 +69,10 @@ const Initial = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </Fragment>
+    </View>
   );
 };
+}
 
 const styles = StyleSheet.create({
   scrollView: {

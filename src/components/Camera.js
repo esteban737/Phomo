@@ -1,9 +1,13 @@
 import React, { PureComponent } from 'react';
-import { AppRegistry, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AppRegistry, StyleSheet, Text, TouchableOpacity, View, Image, Alert } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 
 class camera extends PureComponent {
+
+  state = {visible: true}
+
   render() {
+    if (this.state.visible){
     return (
       <View style={styles.container}>
         <RNCamera
@@ -27,6 +31,26 @@ class camera extends PureComponent {
         </View>
       </View>
     );
+        }
+
+    else {
+      return(
+        <View/>
+      )
+    }
+  }
+
+  renderPicture(uri){
+    return(
+      <View>
+      <Image
+          style={{width: 50, height: 50}}
+          source={{uri: uri}}
+        /> 
+        {this.setState({visible: false})}
+      </View> 
+    )
+    
   }
 
   takePicture = async() => {
@@ -34,6 +58,7 @@ class camera extends PureComponent {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
       console.log(data.uri);
+      this.renderPicture(data.uri);
     }
   };
 }
