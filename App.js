@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Router from './src/config/Router';
 import firebase from 'firebase';
+import { AppRegistry, StyleSheet, Text, TouchableOpacity, View, Image, Alert } from 'react-native';
 
 console.disableYellowBox = true;
 

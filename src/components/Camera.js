@@ -3,9 +3,55 @@ import { AppRegistry, StyleSheet, Text, TouchableOpacity, View, Image, Alert } f
 import { RNCamera } from 'react-native-camera';
 import firebase from 'firebase';
 
+
 class camera extends PureComponent {
 
-  state = {visible: true}
+  state = {
+    imgSource: '',
+    uploading: false,
+    progress: 0,
+    images: []
+  };
+
+  uploadImage = () => {
+    var {storage} = firebase.storage();
+    Alert.alert(storage)
+    const ext = this.state.imageUri.split('.').pop(); // Extract image extension
+    const filename = `${uuid()}.${ext}`; // Generate unique name
+    this.setState({ uploading: true });
+    firebase
+      .storage()
+      .ref(`images/${filename}`)
+      .putFile(this.state.imageUri)
+      .on(
+        firebase.storage.TaskEvent.STATE_CHANGED,
+        snapshot => {
+          let state = {};
+          state = {
+            ...state,
+            progress: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 // Calculate progress percentage
+          };
+          if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+            const allImages = this.state.images;
+            allImages.push(snapshot.downloadURL);
+            state = {
+              ...state,
+              uploading: false,
+              imgSource: '',
+              imageUri: '',
+              progress: 0,
+              images: allImages
+            };
+            AsyncStorage.setItem('images', JSON.stringify(allImages));
+          }
+          this.setState(state);
+        },
+        error => {
+          unsubscribe();
+          alert('Sorry, Try again.');
+        }
+      );
+  };
 
   render() {
     
@@ -35,16 +81,17 @@ class camera extends PureComponent {
         
   }
 
-  renderPicture(uri){
-      firebase.database().ref(`/users/`).push(uri)
-  }
-
   takePicture = async() => {
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
-      this.renderPicture(data.uri);
+      //console.log(data.uri);
+      const source = { uri: data.uri}
+      this.setState({
+        imgSource: source,
+        imageUri: data.uri
+      })
+      this.uploadImage();
     }
   };
 }

@@ -34,6 +34,14 @@ target 'Phomo' do
 
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+  
+  pod 'Firebase/Core' 
+
+  pod 'Firebase/Storage', '~> 5.15.0'
+
   target 'PhomoTests' do
     inherit! :search_paths
     # Pods for testing

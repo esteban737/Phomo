@@ -189,6 +189,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-firebase')
+    implementation project(':react-native-fetch-blob')
     implementation project(':react-native-camera')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-vector-icons')
