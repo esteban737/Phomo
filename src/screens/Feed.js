@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import firebase from 'firebase';
+import { connect } from 'react-redux';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,7 +9,9 @@ import {
   Text,
   StatusBar,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert,
+  Image
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
@@ -20,8 +24,14 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+ import { getPics } from '../ducks'
 
 class Feed extends Component{
+
+  componentWillMount(){
+    this.props.getPics();
+  }
+
 render() {
   return (
     <View>
@@ -76,4 +86,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Feed;
+const mapStateToProps = ({ user }) => {
+  const { pics } = user;
+  return { pics };
+};
+
+const mapDispatchToProps = {
+  getPics
+ };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Feed);
